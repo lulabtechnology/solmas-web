@@ -1,43 +1,52 @@
-import type { Metadata } from "next";
-import MailtoForm from "@/components/MailtoForm";
-import { SITE } from "@/lib/site";
+import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Trámites y Solicitudes",
-  description:
-    "Trámites y Solicitudes en SOLMAS: certificaciones registrales, trámites notariales y revisión/preparación documental.",
-};
-
-export default function TramitesPage() {
+export default function Page() {
   return (
-    <section className="section">
+    <main className="section">
       <div className="container">
-        <div className="kicker">Trámites y Solicitudes</div>
-        <h1 className="h2" style={{ margin: "10px 0 10px 0", fontFamily: "var(--font-serif)" }}>
-          Gestione documentos con acompañamiento legal
-        </h1>
-        <p className="p" style={{ maxWidth: 920 }}>
-          Podemos apoyar en gestiones documentales y trámites, verificando requisitos y manteniendo trazabilidad.
-          Si necesitas enviar archivos, envíalos por correo indicando tu nombre y el tipo de trámite.
+        <div className="kicker">Trámites</div>
+        <h1 className="h2" style={{ marginTop: 10 }}>Trámites y Solicitudes</h1>
+        <p className="p" style={{ marginTop: 12, maxWidth: 860 }}>
+          Gestione documentos y solicitudes con acompañamiento legal. Para iniciar, envíe su requerimiento por correo.
         </p>
 
-        <div className="grid grid-2" style={{ marginTop: 18, alignItems: "start" }}>
-          <div className="card">
-            <h2 className="card-title" style={{ fontFamily: "var(--font-serif)" }}>Servicios (general)</h2>
-            <ol style={{ margin: 0, paddingLeft: 18, color: "var(--ink-soft)", lineHeight: 1.9 }}>
-              <li>Solicitud de certificaciones y constancias registrales</li>
-              <li>Trámites notariales y protocolizaciones</li>
-              <li>Preparación y revisión documental para compraventas/donaciones</li>
-            </ol>
-            <div className="hr" />
-            <p className="p-muted">
-              Para adjuntos: envía documentos a <a href={`mailto:${SITE.email}`} style={{ textDecoration: "underline" }}>{SITE.email}</a>.
+        <div className="grid" style={{ marginTop: 22, gridTemplateColumns: "repeat(3, 1fr)" }}>
+          {[
+            ["Solicitud de certificaciones y constancias registrales","Acompañamiento en gestiones registrales y solicitudes documentales."],
+            ["Trámites notariales y protocolizaciones","Preparación, revisión y coordinación de diligencias notariales."],
+            ["Revisión documental para compraventas/donaciones","Apoyo en preparación y verificación de documentación clave."]
+          ].map(([t,d]) => (
+            <div key={t} className="card">
+              <div className="card-pad">
+                <h2 className="h3">{t}</h2>
+                <p className="p" style={{ marginTop: 8 }}>{d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="card" style={{ marginTop: 22 }}>
+          <div className="card-pad" style={{ display: "grid", gap: 10 }}>
+            <h2 className="h3">Enviar solicitud por correo</h2>
+            <p className="p">
+              Envíe un mensaje a <strong>{site.email}</strong> con su nombre, teléfono, tipo de trámite y detalles.
+              Si necesita adjuntar archivos, inclúyalos en el correo.
+            </p>
+            <a className="btn primary" href={`mailto:${site.email}?subject=${encodeURIComponent("Solicitud de trámite - SOLMAS")}`}>
+              Enviar correo
+            </a>
+            <p className="p" style={{ fontSize: 13 }}>
+              Disclaimer: La información enviada es informativa y no crea relación abogado–cliente. Enviar información no garantiza relación profesional.
             </p>
           </div>
-
-          <MailtoForm title="Formulario de trámites" intent="tramite" />
         </div>
+
+        <style jsx>{`
+          @media (max-width: 980px){
+            .grid{ grid-template-columns: 1fr !important; }
+          }
+        `}</style>
       </div>
-    </section>
+    </main>
   );
 }
