@@ -10,13 +10,13 @@ export const metadata: Metadata = {
   title: `${site.name} | Firma de Abogados en Panamá`,
   description:
     "Asesoría legal estratégica en Panamá. Soluciones claras, ágiles y humanas para empresas, familias e inversionistas.",
-  metadataBase: new URL("https://example.com"),
+  metadataBase: new URL("https://solmas-web.vercel.app"),
   openGraph: {
     title: `${site.name} | Firma de Abogados en Panamá`,
     description:
       "Asesoría legal estratégica en Panamá. Soluciones claras, ágiles y humanas para empresas, familias e inversionistas.",
-    type: "website"
-  }
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
