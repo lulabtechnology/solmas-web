@@ -1,117 +1,127 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
-type Pref = {
-  necessary: true;
-  analytics: boolean;
-  marketing: boolean;
-};
+type Consent = "accepted" | "rejected" | "unset";
 
-const KEY = "solmas_cookie_pref_v1";
+const KEY = "solmas_cookie_consent";
 
 export default function CookieBanner() {
-  const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<"bar" | "settings">("bar");
-  const [pref, setPref] = useState<Pref>({ necessary: true, analytics: false, marketing: false });
+  const [consent, setConsent] = useState<Consent>("unset");
+  const [openPrefs, setOpenPrefs] = useState(false);
 
-  useEffect(() => {
-    const saved = localStorage.getItem(KEY);
-    if (!saved) setOpen(true);
-
-    const onOpen = () => {
-      setOpen(true);
-      setMode("settings");
-    };
-    window.addEventListener("solmas:open-cookies", onOpen);
-    return () => window.removeEventListener("solmas:open-cookies", onOpen);
+  const stored = useMemo<Consent>(() => {
+    if (typeof window === "undefined") return "unset";
+    const v = window.localStorage.getItem(KEY) as Consent | null;
+    return v ?? "unset";
   }, []);
 
-  const save = (p: Pref) => {
-    localStorage.setItem(KEY, JSON.stringify(p));
-    setPref(p);
-    setOpen(false);
-    setMode("bar");
-  };
+  useEffect(() => {
+    setConsent(stored);
+  }, [stored]);
 
-  if (!open) return null;
+  useEffect(() => {
+    const onOpen = () => setOpenPrefs(true);
+    window.addEventListener("open-cookie-preferences", onOpen);
+    return () => window.removeEventListener("open-cookie-preferences", onOpen);
+  }, []);
+
+  function save(v: Consent) {
+    setConsent(v);
+    window.localStorage.setItem(KEY, v);
+    setOpenPrefs(false);
+  }
+
+  const showBanner = consent === "unset";
 
   return (
-    <div className="cookieBar" role="dialog" aria-label="Preferencias de cookies" aria-modal="true">
-      {mode === "bar" ? (
-        <div className="cookieRow">
-          <div style={{ maxWidth: 760 }}>
-            <div style={{ fontWeight: 900, marginBottom: 6 }}>Cookies</div>
-            <div className="p-muted">
-              Usamos cookies necesarias para el funcionamiento del sitio. Puedes aceptar o rechazar cookies no esenciales.
-              Consulta la <Link href="/legal/cookies" style={{ textDecoration: "underline" }}>Política de Cookies</Link>.
+    <>
+      {showBanner && (
+        <div
+          style={{
+            position: "fixed",
+            left: 16,
+            right: 16,
+            bottom: 16,
+            zIndex: 90,
+            display: "grid",
+            placeItems: "center"
+          }}
+        >
+          <div
+            className="card"
+            style={{
+              width: "min(980px, 100%)",
+              borderRadius: 18,
+              background: "rgba(255,255,255,.95)",
+              backdropFilter: "blur(10px)"
+            }}
+          >
+            <div className="card-pad" style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
+              <div style={{ flex: "1 1 420px" }}>
+                <div className="kicker">Cookies</div>
+                <p className="p" style={{ marginTop: 6 }}>
+                  Usamos cookies para mejorar la experiencia y medir rendimiento básico. Puedes aceptar, rechazar o configurar tus preferencias.
+                </p>
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <button className="btn" type="button" onClick={() => setOpenPrefs(true)}>
+                  Configurar
+                </button>
+                <button className="btn" type="button" onClick={() => save("rejected")}>
+                  Rechazar
+                </button>
+                <button className="btn primary" type="button" onClick={() => save("accepted")}>
+                  Aceptar
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div className="cookieActions">
-            <button className="btn btn-outline" onClick={() => save({ necessary: true, analytics: false, marketing: false })}>
-              Rechazar
-            </button>
-            <button className="btn btn-outline" onClick={() => { setMode("settings"); }}>
-              Configurar
-            </button>
-            <button className="btn btn-primary" onClick={() => save({ necessary: true, analytics: true, marketing: true })}>
-              Aceptar
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="cookieRow">
-          <div style={{ maxWidth: 760 }}>
-            <div style={{ fontWeight: 900, marginBottom: 6 }}>Configurar cookies</div>
-            <div className="p-muted">
-              Las cookies necesarias siempre están activas. Las no esenciales ayudan a medir rendimiento y marketing.
-              Si no usamos herramientas de analítica/ads aún, mantenerlas desactivadas es válido.
-            </div>
-
-            <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
-              <label className="checkRow">
-                <input type="checkbox" checked disabled />
-                <span>
-                  <strong>Necesarias</strong> (siempre activas) — funcionamiento básico del sitio.
-                </span>
-              </label>
-
-              <label className="checkRow">
-                <input
-                  type="checkbox"
-                  checked={pref.analytics}
-                  onChange={(e) => setPref((p) => ({ ...p, analytics: e.target.checked }))}
-                />
-                <span>
-                  <strong>Analítica</strong> — métricas para mejorar el sitio.
-                </span>
-              </label>
-
-              <label className="checkRow">
-                <input
-                  type="checkbox"
-                  checked={pref.marketing}
-                  onChange={(e) => setPref((p) => ({ ...p, marketing: e.target.checked }))}
-                />
-                <span>
-                  <strong>Marketing</strong> — personalización y campañas.
-                </span>
-              </label>
-            </div>
-          </div>
-
-          <div className="cookieActions">
-            <button className="btn btn-outline" onClick={() => { setMode("bar"); }}>
-              Volver
-            </button>
-            <button className="btn btn-primary" onClick={() => save(pref)}>
-              Guardar
-            </button>
           </div>
         </div>
       )}
-    </div>
+
+      {openPrefs && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 95,
+            background: "rgba(2,6,23,.55)",
+            display: "grid",
+            placeItems: "center",
+            padding: 18
+          }}
+          onClick={() => setOpenPrefs(false)}
+        >
+          <div className="card" style={{ width: "min(720px, 100%)", background: "#fff" }} onClick={(e) => e.stopPropagation()}>
+            <div className="card-pad" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <strong>Preferencias de cookies</strong>
+              <button className="btn small" type="button" onClick={() => setOpenPrefs(false)}>
+                Cerrar
+              </button>
+            </div>
+            <div className="hr" />
+            <div className="card-pad" style={{ display: "grid", gap: 12 }}>
+              <p className="p">
+                Cookies esenciales: siempre activas. Cookies de analítica: opcionales (pendiente de confirmar si se usará analítica).
+              </p>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <button className="btn" type="button" onClick={() => save("rejected")}>
+                  Guardar: Rechazar
+                </button>
+                <button className="btn primary" type="button" onClick={() => save("accepted")}>
+                  Guardar: Aceptar
+                </button>
+              </div>
+              <p className="p" style={{ fontSize: 13 }}>
+                Para más información, revisa la página de <a href="/legal/cookies" style={{ textDecoration: "underline" }}>Política de Cookies</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
