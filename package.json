@@ -19,7 +19,7 @@
     "@types/react-dom": "18.2.25",
     "typescript": "5.4.5"
   },
-  "engines": {
-    "node": ">=20"
+  "engines": { "node": "20.x" }
+
   }
 }
