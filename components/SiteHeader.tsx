@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { nav, site } from "@/lib/site";
+import { nav, site, ASSETS } from "@/lib/site";
 
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -33,17 +33,17 @@ export default function SiteHeader() {
           zIndex: 60,
           background: "rgba(255,255,255,.88)",
           backdropFilter: "blur(10px)",
-          borderBottom: scrolled ? "1px solid rgba(15,23,42,.10)" : "1px solid transparent"
+          borderBottom: scrolled ? "1px solid rgba(15,23,42,.10)" : "1px solid transparent",
         }}
       >
         <div className="container" style={{ height: 74, display: "flex", alignItems: "center", gap: 16 }}>
           <Link href="/" aria-label={`${site.name} Inicio`} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {/* Cambia a /assets/img/brand/logo-azul.svg */}
+            {/* ✅ PNG (controlado por ASSETS) */}
             <img
-              src="/assets/img/brand/logo-azul.svg"
+              src={ASSETS.brand.logoBlue}
               alt={`${site.name} logo`}
-              width={128}
-              height={32}
+              width={180}
+              height={46}
               style={{ height: 28, width: "auto" }}
             />
           </Link>
@@ -58,7 +58,7 @@ export default function SiteHeader() {
                     fontSize: 14,
                     color: "rgba(11,18,32,.82)",
                     padding: "10px 8px",
-                    borderRadius: 999
+                    borderRadius: 999,
                   }}
                 >
                   {it.label}
@@ -83,7 +83,6 @@ export default function SiteHeader() {
         </div>
       </header>
 
-      {/* Mobile menu */}
       {open && (
         <div
           role="dialog"
@@ -95,15 +94,11 @@ export default function SiteHeader() {
             background: "rgba(2,6,23,.55)",
             display: "grid",
             placeItems: "center",
-            padding: 18
+            padding: 18,
           }}
           onClick={() => setOpen(false)}
         >
-          <div
-            className="card"
-            style={{ width: "min(520px, 100%)", background: "#fff" }}
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="card" style={{ width: "min(520px, 100%)", background: "#fff" }} onClick={(e) => e.stopPropagation()}>
             <div className="card-pad" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <strong>{site.name}</strong>
               <button className="btn small" type="button" onClick={() => setOpen(false)}>
@@ -128,8 +123,8 @@ export default function SiteHeader() {
         </div>
       )}
 
-      {/* Responsive helpers */}
-      <style jsx global>{`
+      {/* ✅ SIN styled-jsx */}
+      <style>{`
         @media (max-width: 980px) {
           .hideMobile { display: none !important; }
           .showMobile { display: inline-flex !important; }
