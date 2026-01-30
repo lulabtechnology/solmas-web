@@ -11,7 +11,7 @@ export const SITE = {
   },
 } as const;
 
-// Alias por si en otros archivos importas `site` en minúscula
+// Alias por si en otros archivos importas `site`
 export const site = SITE;
 
 export const nav = [
@@ -23,21 +23,38 @@ export const nav = [
   { href: "/contacto", label: "Contacto" },
 ] as const;
 
+type LegalConfig = {
+  jurisdiction: string;
+  placeholders: Record<string, string>; // ✅ clave: evita que TypeScript rompa por keys nuevos
+  disclaimers: {
+    infoNoLegalAdvice: string;
+    noRelationshipByContact: string;
+    confidentialityNote: string;
+  };
+};
+
 /**
  * Textos legales base.
- * Importante: placeholders para completar con razón social/RUC exacto.
+ * Placeholders: completa cuando tengas razón social/RUC exacto.
  */
-export const LEGAL = {
+export const LEGAL: LegalConfig = {
   jurisdiction: "República de Panamá",
   placeholders: {
-    // ✅ compatibilidad con tu página (usa legalName)
+    // ✅ nombres usados por tus páginas (compatibilidad)
     legalName: "[PLACEHOLDER: Razón social exacta]",
-
-    // ✅ compatibilidad alternativa (por si en otros lados usas razonSocial)
     razonSocial: "[PLACEHOLDER: Razón social exacta]",
 
+    // ✅ RUC
     ruc: "[PLACEHOLDER: RUC exacto]",
+
+    // ✅ domicilio / address (tu error actual es por address)
     domicilio: "[PLACEHOLDER: Domicilio legal completo]",
+    address: "[PLACEHOLDER: Domicilio legal completo]",
+
+    // ✅ por si alguna página lo usa
+    email: SITE.email,
+    phone: SITE.phone,
+    jurisdiction: "República de Panamá",
   },
   disclaimers: {
     infoNoLegalAdvice:
@@ -47,7 +64,7 @@ export const LEGAL = {
     confidentialityNote:
       "Recomendamos no incluir información sensible o confidencial hasta confirmar formalmente la contratación y el alcance del servicio.",
   },
-} as const;
+};
 
 export const PRACTICE_AREAS = [
   "Derecho Corporativo y Mercantil",
