@@ -8,7 +8,9 @@ export default function HomePage() {
       <section className="section">
         <div className="container">
           <div className="kicker">Áreas de práctica</div>
-          <h2 className="h2" style={{ marginTop: 10 }}>Servicios legales con enfoque estratégico</h2>
+          <h2 className="h2" style={{ marginTop: 10 }}>
+            Servicios legales con enfoque estratégico
+          </h2>
           <p className="p" style={{ marginTop: 10, maxWidth: 760 }}>
             Estructuramos soluciones por especialidad, con comunicación clara y ejecución responsable.
           </p>
@@ -25,14 +27,18 @@ export default function HomePage() {
               <div key={t} className="card">
                 <div className="card-pad">
                   <h3 className="h3">{t}</h3>
-                  <p className="p" style={{ marginTop: 8 }}>{d}</p>
+                  <p className="p" style={{ marginTop: 8 }}>
+                    {d}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
 
           <div style={{ marginTop: 18 }}>
-            <a className="btn" href="/areas-de-practica">Ver todas las áreas</a>
+            <a className="btn" href="/areas-de-practica">
+              Ver todas las áreas
+            </a>
           </div>
         </div>
       </section>
@@ -59,15 +65,20 @@ export default function HomePage() {
               </div>
 
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <a className="btn primary" href="/contacto">Agendar consulta</a>
-                <a className="btn" href="/nuestra-firma">Conocer la firma</a>
+                <a className="btn primary" href="/contacto">
+                  Agendar consulta
+                </a>
+                <a className="btn" href="/nuestra-firma">
+                  Conocer la firma
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <style jsx>{`
+      {/* ✅ IMPORTANTE: style normal, NO styled-jsx */}
+      <style>{`
         @media (max-width: 980px){
           .grid{ grid-template-columns: 1fr !important; }
         }
