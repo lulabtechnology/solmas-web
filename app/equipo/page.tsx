@@ -51,7 +51,7 @@ export default function Page() {
           </div>
         </div>
 
-        <style jsx>{`
+        <style>{`
           @media (max-width: 980px){
             .grid{ grid-template-columns: 1fr !important; }
           }
