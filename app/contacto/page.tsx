@@ -1,43 +1,42 @@
-import type { Metadata } from "next";
-import MailtoForm from "@/components/MailtoForm";
-import { SITE } from "@/lib/site";
+import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contacto",
-  description:
-    "Contacto SOLMAS. Agenda consulta y comparte tu caso. Atención a extranjeros y panameños.",
-};
-
-export default function ContactoPage() {
+export default function Page() {
   return (
-    <section className="section">
+    <main className="section">
       <div className="container">
         <div className="kicker">Contacto</div>
-        <h1 className="h2" style={{ margin: "10px 0 10px 0", fontFamily: "var(--font-serif)" }}>
-          Agenda una consulta
-        </h1>
-        <p className="p" style={{ maxWidth: 920 }}>
-          Cuéntanos tu necesidad y te indicaremos el alcance y modalidad. Si necesitas adjuntar documentos, envíalos por correo.
+        <h1 className="h2" style={{ marginTop: 10 }}>Conversemos</h1>
+        <p className="p" style={{ marginTop: 12, maxWidth: 860 }}>
+          Para iniciar, contáctenos por WhatsApp o correo. Responderemos con la mayor brevedad posible.
         </p>
 
-        <div className="grid grid-2" style={{ marginTop: 18, alignItems: "start" }}>
-          <div className="card">
-            <h2 className="card-title" style={{ fontFamily: "var(--font-serif)" }}>Datos</h2>
-            <div className="hr" />
-            <p className="p" style={{ margin: 0 }}><strong>Teléfono:</strong> {SITE.phoneDisplay}</p>
-            <p className="p" style={{ margin: "8px 0 0 0" }}><strong>Correo:</strong> {SITE.email}</p>
-            <p className="p" style={{ margin: "8px 0 0 0" }}><strong>Dirección:</strong> {SITE.address}</p>
+        <div className="grid" style={{ marginTop: 22, gridTemplateColumns: "repeat(3, 1fr)" }}>
+          <div className="card"><div className="card-pad"><div className="kicker">Teléfono</div><p className="p" style={{ marginTop: 8 }}>{site.phone}</p></div></div>
+          <div className="card"><div className="card-pad"><div className="kicker">Correo</div><p className="p" style={{ marginTop: 8 }}>{site.email}</p></div></div>
+          <div className="card"><div className="card-pad"><div className="kicker">Dirección</div><p className="p" style={{ marginTop: 8 }}>{site.address}</p></div></div>
+        </div>
 
-            <div className="hr" />
-
-            <p className="p-muted">
-              Disclaimer: La información es informativa y no crea relación abogado–cliente. Enviar información no garantiza relación profesional.
+        <div className="card" style={{ marginTop: 22 }} id="form">
+          <div className="card-pad" style={{ display: "grid", gap: 10 }}>
+            <h2 className="h3">Enviar mensaje por correo</h2>
+            <p className="p">
+              Para proteger su confidencialidad, recomendamos enviar su información por correo.
+            </p>
+            <a className="btn primary" href={`mailto:${site.email}?subject=${encodeURIComponent("Consulta - SOLMAS")}`}>
+              Escribir correo
+            </a>
+            <p className="p" style={{ fontSize: 13 }}>
+              Disclaimer: La información aquí es informativa y no crea relación abogado–cliente. Enviar información no garantiza relación profesional.
             </p>
           </div>
-
-          <MailtoForm title="Formulario de contacto" intent="contacto" />
         </div>
+
+        <style jsx>{`
+          @media (max-width: 980px){
+            .grid{ grid-template-columns: 1fr !important; }
+          }
+        `}</style>
       </div>
-    </section>
+    </main>
   );
 }
