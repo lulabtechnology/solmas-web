@@ -3,15 +3,15 @@ export const SITE = {
   phone: "+507 6529-7584",
   email: "solmaslegal@gmail.com",
   address: "Panamá, San Francisco (Calle 65 Este)",
-  instagram: "pendiente de confirmar", // @solmaslegal si luego confirmas
+  instagram: "pendiente de confirmar", // @solmaslegal cuando confirmes
   social: {
     linkedin: "#",
     instagram: "#",
-    facebook: "#"
-  }
+    facebook: "#",
+  },
 } as const;
 
-// Alias para compatibilidad con otros imports (si ya usas `site`)
+// Alias por si en otros archivos importas `site` en minúscula
 export const site = SITE;
 
 export const nav = [
@@ -20,19 +20,24 @@ export const nav = [
   { href: "/areas-de-practica", label: "Áreas" },
   { href: "/equipo", label: "Equipo" },
   { href: "/tramites", label: "Trámites" },
-  { href: "/contacto", label: "Contacto" }
+  { href: "/contacto", label: "Contacto" },
 ] as const;
 
 /**
- * Textos base legales (plantilla).
- * Ajusta placeholders cuando tengas razón social/RUC exacto.
+ * Textos legales base.
+ * Importante: placeholders para completar con razón social/RUC exacto.
  */
 export const LEGAL = {
   jurisdiction: "República de Panamá",
   placeholders: {
+    // ✅ compatibilidad con tu página (usa legalName)
+    legalName: "[PLACEHOLDER: Razón social exacta]",
+
+    // ✅ compatibilidad alternativa (por si en otros lados usas razonSocial)
     razonSocial: "[PLACEHOLDER: Razón social exacta]",
+
     ruc: "[PLACEHOLDER: RUC exacto]",
-    domicilio: "[PLACEHOLDER: Domicilio legal completo]"
+    domicilio: "[PLACEHOLDER: Domicilio legal completo]",
   },
   disclaimers: {
     infoNoLegalAdvice:
@@ -40,8 +45,8 @@ export const LEGAL = {
     noRelationshipByContact:
       "El envío de información mediante formularios o correo no garantiza la aceptación del caso ni la existencia de una relación profesional.",
     confidentialityNote:
-      "Recomendamos no incluir información sensible o confidencial hasta confirmar formalmente la contratación y el alcance del servicio."
-  }
+      "Recomendamos no incluir información sensible o confidencial hasta confirmar formalmente la contratación y el alcance del servicio.",
+  },
 } as const;
 
 export const PRACTICE_AREAS = [
@@ -50,5 +55,5 @@ export const PRACTICE_AREAS = [
   "Derecho Administrativo y Regulatorio",
   "Propiedad Intelectual",
   "Derecho Civil y Patrimonial",
-  "Derecho de Familia"
+  "Derecho de Familia",
 ] as const;
