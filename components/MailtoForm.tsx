@@ -4,114 +4,147 @@ import { useMemo, useState } from "react";
 import { PRACTICES, SITE } from "@/lib/site";
 
 type Props = {
-  title: string;
+  title?: string;
   subtitle?: string;
-  intent: "contacto" | "tramite";
+  ctaLabel?: string;
 };
 
-export default function MailtoForm({ title, subtitle, intent }: Props) {
+function enc(v: string) {
+  return encodeURIComponent(v);
+}
+
+export default function MailtoForm({
+  title = "Cuéntanos tu caso",
+  subtitle = "Respuesta inicial en 24–48 horas hábiles (pendiente de confirmar).",
+  ctaLabel = "Enviar por correo",
+}: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [area, setArea] = useState(PRACTICES[0]?.title ?? "Derecho Corporativo y Mercantil");
+  const [area, setArea] = useState<string>(PRACTICES[0] ?? "Derecho Corporativo y Mercantil");
   const [message, setMessage] = useState("");
   const [ok, setOk] = useState(false);
 
-  const subject = useMemo(() => {
-    return intent === "tramite" ? `Trámite/Solicitud — ${name || "Cliente"}` : `Consulta — ${name || "Cliente"}`;
-  }, [intent, name]);
+  const mailtoHref = useMemo(() => {
+    const subject = `Solicitud de contacto — ${SITE.name}`;
+    const body = [
+      `Nombre: ${name || "-"}`,
+      `Email: ${email || "-"}`,
+      `Teléfono: ${phone || "-"}`,
+      `Área: ${area || "-"}`,
+      ``,
+      `Mensaje:`,
+      `${message || "-"}`,
+      ``,
+      `---`,
+      `Nota: Este mensaje es informativo y no crea relación abogado–cliente.`,
+    ].join("\n");
 
-  const body = useMemo(() => {
-    const lines = [
-      `Nombre: ${name}`,
-      `Email: ${email}`,
-      `Teléfono: ${phone}`,
-      `Tipo: ${area}`,
-      "",
-      "Detalle:",
-      message,
-      "",
-      "—",
-      "Nota: Si necesitas adjuntar documentos, envíalos directamente a este correo indicando tu nombre y el tipo de trámite/caso.",
-    ];
-    return encodeURIComponent(lines.join("\n"));
+    return `mailto:${SITE.email}?subject=${enc(subject)}&body=${enc(body)}`;
   }, [name, email, phone, area, message]);
 
-  const mailto = useMemo(() => {
-    return `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${body}`;
-  }, [subject, body]);
-
-  const canSend = name.trim() && email.trim() && message.trim();
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setOk(true);
+    // abre el cliente de correo
+    window.location.href = mailtoHref;
+    // opcional: limpiar
+    // setName(""); setEmail(""); setPhone(""); setMessage("");
+  }
 
   return (
-    <div className="card">
-      <h2 className="h3" style={{ margin: 0 }}>{title}</h2>
-      {subtitle ? <p className="p" style={{ marginTop: 8 }}>{subtitle}</p> : null}
+    <section className="section">
+      <div className="container">
+        <div className="card">
+          <div className="card-pad" style={{ display: "grid", gap: 12 }}>
+            <div>
+              <h2 className="h2">{title}</h2>
+              <p className="p" style={{ marginTop: 8, maxWidth: 820 }}>
+                {subtitle}
+              </p>
+            </div>
 
-      <div className="hr" />
+            <form onSubmit={onSubmit} className="grid" style={{ gap: 12 }}>
+              <div className="grid" style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+                <div>
+                  <label className="label">Nombre</label>
+                  <input
+                    className="input"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Tu nombre completo"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="label">Email</label>
+                  <input
+                    className="input"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="tu@email.com"
+                    required
+                  />
+                </div>
+              </div>
 
-      <form
-        className="form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (!canSend) return;
-          window.location.href = mailto;
-          setOk(true);
-        }}
-      >
-        <div className="grid grid-2">
-          <div className="field">
-            <span className="label">Nombre</span>
-            <input className="input" value={name} onChange={(e) => setName(e.target.value)} required />
-          </div>
-          <div className="field">
-            <span className="label">Email</span>
-            <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <div className="grid" style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+                <div>
+                  <label className="label">Teléfono</label>
+                  <input
+                    className="input"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+507 …"
+                  />
+                </div>
+                <div>
+                  <label className="label">Tipo de caso</label>
+                  <select className="select" value={area} onChange={(e) => setArea(e.target.value)}>
+                    {PRACTICES.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="label">Mensaje</label>
+                <textarea
+                  className="textarea"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Cuéntanos brevemente tu situación (sin incluir información sensible)."
+                  rows={6}
+                  required
+                />
+                <p className="micro" style={{ marginTop: 8 }}>
+                  Este formulario no crea relación abogado–cliente. Evita incluir información sensible hasta confirmar formalmente el alcance del servicio.
+                </p>
+              </div>
+
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+                <button type="submit" className="btn primary">
+                  {ctaLabel}
+                </button>
+                <a className="btn" href={`mailto:${SITE.email}`}>
+                  Escribir a {SITE.email}
+                </a>
+                {ok ? <span className="micro">Abriendo tu cliente de correo…</span> : null}
+              </div>
+            </form>
           </div>
         </div>
 
-        <div className="grid grid-2">
-          <div className="field">
-            <span className="label">Teléfono</span>
-            <input className="input" value={phone} onChange={(e) => setPhone(e.target.value)} />
-          </div>
-          <div className="field">
-            <span className="label">Tipo de caso / área</span>
-            <select className="select" value={area} onChange={(e) => setArea(e.target.value)}>
-              {PRACTICES.map((p) => (
-                <option key={p.key} value={p.title}>
-                  {p.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="field">
-          <span className="label">Mensaje</span>
-          <textarea className="textarea" value={message} onChange={(e) => setMessage(e.target.value)} required />
-        </div>
-
-        <label className="checkRow">
-          <input type="checkbox" required />
-          <span>
-            He leído y acepto la <a href="/legal/privacidad" style={{ textDecoration: "underline" }}>Política de Privacidad</a>.
-            <br />
-            <strong>Disclaimer:</strong> Este formulario es informativo y no crea relación abogado–cliente. Enviar información no garantiza relación profesional.
-          </span>
-        </label>
-
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-          <button className="btn btn-primary" type="submit" disabled={!canSend}>
-            Enviar por correo
-          </button>
-          <a className="btn btn-outline" href={`mailto:${SITE.email}?subject=Consulta%20—%20${SITE.name}`}>
-            Abrir correo
-          </a>
-        </div>
-
-        {ok ? <div className="p-muted">Listo: se abrirá tu correo para enviar el mensaje.</div> : null}
-      </form>
-    </div>
+        <style>{`
+          @media (max-width: 980px){
+            .grid{ grid-template-columns: 1fr !important; }
+          }
+        `}</style>
+      </div>
+    </section>
   );
 }
