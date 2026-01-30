@@ -25,7 +25,7 @@ export const nav = [
 
 type LegalConfig = {
   jurisdiction: string;
-  placeholders: Record<string, string>; // ✅ clave: evita que TypeScript rompa por keys nuevos
+  placeholders: Record<string, string>;
   disclaimers: {
     infoNoLegalAdvice: string;
     noRelationshipByContact: string;
@@ -33,28 +33,18 @@ type LegalConfig = {
   };
 };
 
-/**
- * Textos legales base.
- * Placeholders: completa cuando tengas razón social/RUC exacto.
- */
 export const LEGAL: LegalConfig = {
   jurisdiction: "República de Panamá",
   placeholders: {
-    // ✅ nombres usados por tus páginas (compatibilidad)
     legalName: "[PLACEHOLDER: Razón social exacta]",
     razonSocial: "[PLACEHOLDER: Razón social exacta]",
-
-    // ✅ RUC
     ruc: "[PLACEHOLDER: RUC exacto]",
-
-    // ✅ domicilio / address (tu error actual es por address)
     domicilio: "[PLACEHOLDER: Domicilio legal completo]",
     address: "[PLACEHOLDER: Domicilio legal completo]",
 
-    // ✅ por si alguna página lo usa
+    // opcionales por si se usan en copy legal
     email: SITE.email,
     phone: SITE.phone,
-    jurisdiction: "República de Panamá",
   },
   disclaimers: {
     infoNoLegalAdvice:
@@ -74,3 +64,10 @@ export const PRACTICE_AREAS = [
   "Derecho Civil y Patrimonial",
   "Derecho de Familia",
 ] as const;
+
+/**
+ * ✅ Alias de compatibilidad:
+ * Algunos componentes importan PRACTICES.
+ * Así evitamos que el build se rompa por nombres distintos.
+ */
+export const PRACTICES = PRACTICE_AREAS;
