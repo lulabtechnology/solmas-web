@@ -1,38 +1,40 @@
-import type { Metadata } from "next";
-import { PRACTICES } from "@/lib/site";
+const areas = [
+  ["Derecho Corporativo y Mercantil","Contratos comerciales, constitución de sociedades (S.A., SRL y equivalentes), soporte a empresas, actas y reformas, acompañamiento estratégico."],
+  ["Notarías y Registro Público","Trámites notariales, compraventas, donaciones, inscripción/registro, diligencias documentales. (Fundaciones/fideicomisos: si aplica, pendiente de confirmar)."],
+  ["Derecho Administrativo y Regulatorio","Licencias, permisos, idoneidad, reclamos y gestiones ante entidades (DGI, Migración, Aduanas y otras)."],
+  ["Propiedad Intelectual","Nombres comerciales, marcas, protección y gestión de registro."],
+  ["Derecho Civil y Patrimonial","Sucesiones, asuntos patrimoniales, compraventa de bienes, conflictos civiles."],
+  ["Derecho de Familia","Matrimonios, divorcios, patria potestad, custodia, pensiones alimenticias, tutelas/curatelas, régimen económico matrimonial (si aplica)."]
+];
 
-export const metadata: Metadata = {
-  title: "Áreas de Práctica",
-  description:
-    "Áreas de práctica de SOLMAS: corporativo, notarías y registro, administrativo, propiedad intelectual, civil y familia.",
-};
-
-export default function AreasPage() {
+export default function Page() {
   return (
-    <section className="section">
+    <main className="section">
       <div className="container">
-        <div className="kicker">Áreas de práctica</div>
-        <h1 className="h2" style={{ margin: "10px 0 10px 0", fontFamily: "var(--font-serif)" }}>
-          Especialización por áreas, atención a medida
-        </h1>
-        <p className="p" style={{ maxWidth: 920 }}>
-          Estructuramos cada caso con claridad: diagnóstico, estrategia y ejecución. Selecciona el área que se ajusta a tu necesidad.
+        <div className="kicker">Áreas</div>
+        <h1 className="h2" style={{ marginTop: 10 }}>Áreas de práctica</h1>
+        <p className="p" style={{ marginTop: 12, maxWidth: 860 }}>
+          Estructuramos la atención por especialidad para brindar claridad desde el inicio y ejecutar con rigor.
         </p>
 
-        <div className="grid" style={{ marginTop: 18 }}>
-          {PRACTICES.map((p) => (
-            <div key={p.key} className="card">
-              <h2 className="card-title" style={{ fontFamily: "var(--font-serif)", marginBottom: 8 }}>
-                {p.title}
-              </h2>
-              <p className="p-muted" style={{ marginTop: 0 }}>{p.oneLiner}</p>
-              <ul style={{ margin: "10px 0 0 0", paddingLeft: 18, color: "var(--ink-soft)", lineHeight: 1.9 }}>
-                {p.bullets.map((b, idx) => <li key={idx}>{b}</li>)}
-              </ul>
+        <div className="grid" style={{ marginTop: 22, gridTemplateColumns: "repeat(2, 1fr)" }}>
+          {areas.map(([t, d]) => (
+            <div key={t} className="card">
+              <div className="card-pad">
+                <h2 className="h3">{t}</h2>
+                <p className="p" style={{ marginTop: 8 }}>{d}</p>
+              </div>
             </div>
           ))}
         </div>
+
+        <style jsx>{`
+          @media (max-width: 980px){
+            .grid{ grid-template-columns: 1fr !important; }
+          }
+        `}</style>
       </div>
-    </section>
+    </main>
   );
 }
+
