@@ -3,7 +3,7 @@ export const SITE = {
   phone: "+507 6529-7584",
   email: "solmaslegal@gmail.com",
   address: "Panamá, San Francisco (Calle 65 Este)",
-  instagram: "pendiente de confirmar", // @solmaslegal cuando confirmes
+  instagram: "pendiente de confirmar",
   social: {
     linkedin: "#",
     instagram: "#",
@@ -13,6 +13,27 @@ export const SITE = {
 
 // Alias por si en otros archivos importas `site`
 export const site = SITE;
+
+/** ✅ RUTAS DE ASSETS (aquí se controla TODO lo visual) */
+export const ASSETS = {
+  brand: {
+    // Cambia SVG -> PNG aquí y listo
+    logoBlue: "/assets/img/brand/logo-azul.png",
+    logoWhite: "/assets/img/brand/logo-blanco.png",
+    favicon: "/favicon.ico",
+  },
+  hero: {
+    desktop: "/assets/img/hero/hero-desktop.jpg",
+    mobile: "/assets/img/hero/hero-mobile.jpg",
+  },
+  team: {
+    ana: "/assets/img/team/ana-isabel.jpg",
+    luis: "/assets/img/team/luis-spadafora.jpg",
+  },
+  og: {
+    image: "/assets/img/og/og-solmas.jpg",
+  },
+} as const;
 
 export const nav = [
   { href: "/", label: "Inicio" },
@@ -42,7 +63,6 @@ export const LEGAL: LegalConfig = {
     domicilio: "[PLACEHOLDER: Domicilio legal completo]",
     address: "[PLACEHOLDER: Domicilio legal completo]",
 
-    // opcionales por si se usan en copy legal
     email: SITE.email,
     phone: SITE.phone,
   },
@@ -65,9 +85,5 @@ export const PRACTICE_AREAS = [
   "Derecho de Familia",
 ] as const;
 
-/**
- * ✅ Alias de compatibilidad:
- * Algunos componentes importan PRACTICES.
- * Así evitamos que el build se rompa por nombres distintos.
- */
+// ✅ Alias de compatibilidad (para componentes viejos)
 export const PRACTICES = PRACTICE_AREAS;
