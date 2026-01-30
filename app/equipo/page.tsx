@@ -1,102 +1,62 @@
-import type { Metadata } from "next";
-import { ASSETS } from "@/lib/site";
-
-export const metadata: Metadata = {
-  title: "Equipo",
-  description:
-    "Conoce el equipo de SOLMAS. Perfil de Ana Isabel C. Madrid y Luis Spadafora (pendiente de confirmar credenciales).",
-};
-
-function ProfileImage({ src, alt }: { src: string; alt: string }) {
+export default function Page() {
   return (
-    <img
-      src={src}
-      alt={alt}
-      width={900}
-      height={1125}
-      style={{ borderRadius: 16, border: "1px solid rgba(11,27,43,.12)", aspectRatio: "4/5", objectFit: "cover" }}
-      onError={(e) => {
-        (e.currentTarget as HTMLImageElement).style.display = "none";
-      }}
-    />
-  );
-}
-
-export default function EquipoPage() {
-  return (
-    <section className="section">
+    <main className="section">
       <div className="container">
         <div className="kicker">Equipo</div>
-        <h1 className="h2" style={{ margin: "10px 0 10px 0", fontFamily: "var(--font-serif)" }}>
-          Cercanía, criterio y confidencialidad
-        </h1>
-        <p className="p" style={{ maxWidth: 920 }}>
-          Un acompañamiento profesional exige comunicación clara y seguimiento. Nuestro equipo se organiza por áreas para resolver con rigor y orden documental.
+        <h1 className="h2" style={{ marginTop: 10 }}>Profesionales</h1>
+        <p className="p" style={{ marginTop: 12, maxWidth: 860 }}>
+          Un equipo enfocado en excelencia técnica, trato humano y comunicación transparente.
         </p>
 
-        <div className="grid" style={{ marginTop: 18 }}>
+        <div className="grid" style={{ marginTop: 22, gridTemplateColumns: "repeat(2, 1fr)" }}>
           <div className="card">
-            <div className="grid grid-2" style={{ alignItems: "start" }}>
-              <div>
-                <ProfileImage src={ASSETS.teamAna} alt="Ana Isabel C. Madrid" />
-              </div>
-              <div>
-                <div className="kicker">CEO / Abogada Senior</div>
-                <h2 className="h2" style={{ margin: "10px 0 8px 0", fontFamily: "var(--font-serif)" }}>
-                  Ana Isabel C. Madrid
-                </h2>
-                <ul style={{ margin: 0, paddingLeft: 18, color: "var(--ink-soft)", lineHeight: 1.9 }}>
-                  <li>Egresada de la USMA (Derecho).</li>
-                  <li>Formación en ciencias políticas con énfasis en negocios internacionales (según formulario).</li>
-                  <li>Diplomado en procesos electorales (según formulario).</li>
-                  <li>Estudiante de maestría en Docencia Superior (según formulario).</li>
-                </ul>
-
-                <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <a className="btn btn-outline" href="#" aria-label="Ver CV (pendiente de subir)">
-                    Ver perfil / CV
-                  </a>
-                </div>
-
-                <p className="p-muted" style={{ marginTop: 12 }}>
-                  *CV disponible: pendiente de adjuntar archivo.
-                </p>
-              </div>
+            <div className="card-pad">
+              <img
+                src="/assets/img/team/ana-isabel.jpg"
+                alt="Ana Isabel C. Madrid"
+                width={900}
+                height={1125}
+                style={{ borderRadius: 14, aspectRatio: "4/5", objectFit: "cover", border: "1px solid rgba(15,23,42,.10)" }}
+                loading="lazy"
+              />
+              <h2 className="h3" style={{ marginTop: 14 }}>Ana Isabel C. Madrid</h2>
+              <p className="p" style={{ marginTop: 6 }}>CEO / Abogada Senior</p>
+              <ul className="p" style={{ marginTop: 10, paddingLeft: 18 }}>
+                <li>Egresada de la USMA (Derecho).</li>
+                <li>Formación en ciencias políticas con énfasis en negocios internacionales (según formulario).</li>
+                <li>Diplomado en procesos electorales (según formulario).</li>
+                <li>Estudiante de maestría en Docencia Superior (según formulario).</li>
+              </ul>
+              <a className="btn small" href="#" style={{ marginTop: 10 }}>Ver perfil/CV (placeholder)</a>
             </div>
           </div>
 
           <div className="card">
-            <div className="grid grid-2" style={{ alignItems: "start" }}>
-              <div>
-                <ProfileImage src={ASSETS.teamLuis} alt="Luis Spadafora" />
-              </div>
-              <div>
-                <div className="kicker">Socio / Abogado</div>
-                <h2 className="h2" style={{ margin: "10px 0 8px 0", fontFamily: "var(--font-serif)" }}>
-                  Luis Spadafora
-                </h2>
-
-                <p className="p" style={{ marginTop: 0 }}>
-                  Credenciales pendientes de confirmar. Perfil profesional en preparación.
-                </p>
-
-                <div className="hr" />
-
-                <p className="p-muted">
-                  Para completar esta sección: enviar CV, áreas principales de práctica y experiencia relevante.
-                </p>
-              </div>
+            <div className="card-pad">
+              <img
+                src="/assets/img/team/luis-spadafora.jpg"
+                alt="Luis Spadafora"
+                width={900}
+                height={1125}
+                style={{ borderRadius: 14, aspectRatio: "4/5", objectFit: "cover", border: "1px solid rgba(15,23,42,.10)" }}
+                loading="lazy"
+              />
+              <h2 className="h3" style={{ marginTop: 14 }}>Luis Spadafora</h2>
+              <p className="p" style={{ marginTop: 6 }}>Socio / Abogado</p>
+              <p className="p" style={{ marginTop: 10 }}>
+                Credenciales pendientes de confirmar. (Solicitar CV para completar perfil.)
+              </p>
+              <a className="btn small" href="#" style={{ marginTop: 10 }}>Ver perfil/CV (placeholder)</a>
             </div>
-          </div>
-
-          <div className="card">
-            <div className="kicker">Confidencialidad</div>
-            <p className="p" style={{ marginTop: 8, maxWidth: 980 }}>
-              Aún no publicamos testimonios sin consentimiento del cliente. Si se publican en el futuro, se permitirá ocultar nombres o información sensible.
-            </p>
           </div>
         </div>
+
+        <style jsx>{`
+          @media (max-width: 980px){
+            .grid{ grid-template-columns: 1fr !important; }
+          }
+        `}</style>
       </div>
-    </section>
+    </main>
   );
 }
