@@ -1,107 +1,140 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
-import { ASSETS, NAV, SITE } from "@/lib/site";
+import Link from "next/link";
+import { nav, site } from "@/lib/site";
 
 export default function SiteHeader() {
-  const pathname = usePathname();
-  const isHome = pathname === "/";
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const items = useMemo(() => nav, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 14);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  const headerClass = useMemo(() => {
-    if (isHome && !scrolled) return "header headerTransparent";
-    return "header headerSolid";
-  }, [isHome, scrolled]);
-
-  const useWhiteLogo = isHome && !scrolled;
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <>
-      <header className={headerClass} style={{ color: useWhiteLogo ? "#fff" : "inherit" }}>
-        <div className="headerInner">
-          <Link href="/" aria-label={`${SITE.name} — Inicio`} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {/* Logo con fallback (si aún no está subido, se verá el nombre) */}
+      <header
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 60,
+          background: "rgba(255,255,255,.88)",
+          backdropFilter: "blur(10px)",
+          borderBottom: scrolled ? "1px solid rgba(15,23,42,.10)" : "1px solid transparent"
+        }}
+      >
+        <div className="container" style={{ height: 74, display: "flex", alignItems: "center", gap: 16 }}>
+          <Link href="/" aria-label={`${site.name} Inicio`} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {/* Cambia a /assets/img/brand/logo-azul.svg */}
             <img
-              src={useWhiteLogo ? ASSETS.logoWhite : ASSETS.logoBlue}
-              alt={`${SITE.name}`}
-              width={140}
-              height={40}
-              style={{ height: 34, width: "auto" }}
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
+              src="/assets/img/brand/logo-azul.svg"
+              alt={`${site.name} logo`}
+              width={128}
+              height={32}
+              style={{ height: 28, width: "auto" }}
             />
-            <span style={{ fontWeight: 800, letterSpacing: ".12em", fontSize: 14, display: "inline-block" }}>
-              {SITE.name}
-            </span>
           </Link>
 
-          <nav className="nav" aria-label="Navegación principal">
-            {NAV.map((i) => (
-              <Link key={i.href} href={i.href}>
-                {i.label}
-              </Link>
-            ))}
-            <Link className="btn btn-primary" href="/contacto">
+          <nav style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 18 }}>
+            <div className="hideMobile" style={{ display: "flex", gap: 18, alignItems: "center" }}>
+              {items.map((it) => (
+                <Link
+                  key={it.href}
+                  href={it.href}
+                  style={{
+                    fontSize: 14,
+                    color: "rgba(11,18,32,.82)",
+                    padding: "10px 8px",
+                    borderRadius: 999
+                  }}
+                >
+                  {it.label}
+                </Link>
+              ))}
+            </div>
+
+            <Link className="btn primary small" href="/contacto">
               Agendar consulta
             </Link>
-          </nav>
 
-          <button
-            className="btn mobileToggle"
-            type="button"
-            aria-label="Abrir menú"
-            onClick={() => setOpen(true)}
-          >
-            Menú
-          </button>
+            <button
+              className="btn small showMobile"
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-label="Abrir menú"
+              style={{ display: "none" }}
+            >
+              Menú
+            </button>
+          </nav>
         </div>
       </header>
 
+      {/* Mobile menu */}
       {open && (
-        <div className="mobileMenu" role="dialog" aria-modal="true" aria-label="Menú móvil">
-          <div className="mobilePanel">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-              <strong>{SITE.name}</strong>
-              <button className="btn" type="button" onClick={() => setOpen(false)}>
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 80,
+            background: "rgba(2,6,23,.55)",
+            display: "grid",
+            placeItems: "center",
+            padding: 18
+          }}
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="card"
+            style={{ width: "min(520px, 100%)", background: "#fff" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="card-pad" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <strong>{site.name}</strong>
+              <button className="btn small" type="button" onClick={() => setOpen(false)}>
                 Cerrar
               </button>
             </div>
-
-            {NAV.map((i) => (
-              <Link key={i.href} href={i.href} onClick={() => setOpen(false)}>
-                {i.label}
-              </Link>
-            ))}
-
-            <div style={{ marginTop: 10 }}>
-              <Link className="btn btn-primary" href="/contacto" onClick={() => setOpen(false)}>
-                Agendar consulta
-              </Link>
-            </div>
-
             <div className="hr" />
-
-            <a className="btn btn-outline" href={`mailto:${SITE.email}?subject=Consulta%20—%20${SITE.name}`}>
-              Escribir por correo
-            </a>
+            <div className="card-pad" style={{ display: "grid", gap: 10 }}>
+              {items.map((it) => (
+                <Link
+                  key={it.href}
+                  href={it.href}
+                  onClick={() => setOpen(false)}
+                  className="btn"
+                  style={{ justifyContent: "flex-start" }}
+                >
+                  {it.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       )}
+
+      {/* Responsive helpers */}
+      <style jsx global>{`
+        @media (max-width: 980px) {
+          .hideMobile { display: none !important; }
+          .showMobile { display: inline-flex !important; }
+        }
+      `}</style>
     </>
   );
 }
