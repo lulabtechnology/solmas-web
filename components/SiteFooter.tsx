@@ -1,66 +1,74 @@
+"use client";
+
 import Link from "next/link";
-import { SITE } from "@/lib/site";
+import { site } from "@/lib/site";
 
 export default function SiteFooter() {
   return (
-    <footer className="footer">
-      <div className="container footerGrid">
-        <div>
-          <div className="kicker">Firma legal en Panamá</div>
-          <div style={{ fontWeight: 900, letterSpacing: ".10em", marginTop: 8 }}>{SITE.name}</div>
-          <p className="p" style={{ marginTop: 10, maxWidth: 560 }}>
-            Asesoría legal estratégica con enfoque humano, ética y transparencia. Atención a extranjeros y mercado local.
-          </p>
-
-          <div className="footerLinks" style={{ marginTop: 14 }}>
-            <a href={`tel:${SITE.phoneDisplay.replace(/\s/g, "")}`}>{SITE.phoneDisplay}</a>
-            <span style={{ opacity: 0.5 }}>•</span>
-            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-            <span style={{ opacity: 0.5 }}>•</span>
-            <span>{SITE.address}</span>
+    <footer style={{ borderTop: "1px solid rgba(15,23,42,.10)", padding: "54px 0" }}>
+      <div className="container">
+        <div className="grid" style={{ gridTemplateColumns: "1.4fr 1fr 1fr", alignItems: "start" }}>
+          <div style={{ display: "grid", gap: 12 }}>
+            <img
+              src="/assets/img/brand/logo-azul.svg"
+              alt={`${site.name} logo`}
+              width={140}
+              height={34}
+              style={{ height: 30, width: "auto" }}
+              loading="lazy"
+            />
+            <p className="p">
+              Firma boutique en Panamá con enfoque humano, ético y tecnológicamente ágil.
+            </p>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <a className="btn small" href={`tel:${site.phone.replace(/\s/g, "")}`}>Llamar</a>
+              <a className="btn small" href={`mailto:${site.email}`}>Email</a>
+              <button
+                className="btn small"
+                type="button"
+                onClick={() => window.dispatchEvent(new Event("open-cookie-preferences"))}
+              >
+                Preferencias de cookies
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <div className="kicker">Legal</div>
-          <div className="footerLinks" style={{ marginTop: 10 }}>
+          <div style={{ display: "grid", gap: 10 }}>
+            <div className="kicker">Sitio</div>
+            <Link href="/">Inicio</Link>
+            <Link href="/nuestra-firma">Nuestra Firma</Link>
+            <Link href="/areas-de-practica">Áreas de Práctica</Link>
+            <Link href="/equipo">Equipo</Link>
+            <Link href="/tramites">Trámites</Link>
+            <Link href="/contacto">Contacto</Link>
+          </div>
+
+          <div style={{ display: "grid", gap: 10 }}>
+            <div className="kicker">Legal</div>
             <Link href="/legal/privacidad">Política de Privacidad</Link>
             <Link href="/legal/terminos">Términos y Condiciones</Link>
             <Link href="/legal/cookies">Política de Cookies</Link>
             <Link href="/legal/aviso-legal">Aviso Legal</Link>
-            <button
-              type="button"
-              className="btn btn-outline"
-              style={{ marginTop: 8 }}
-              onClick={() => window.dispatchEvent(new Event("solmas:open-cookies"))}
-            >
-              Preferencias de cookies
-            </button>
+
+            <div className="kicker" style={{ marginTop: 12 }}>Contacto</div>
+            <div className="p">{site.address}</div>
+            <div className="p">{site.phone}</div>
+            <div className="p">{site.email}</div>
           </div>
+        </div>
 
-          <div className="hr" />
-
-          <div className="footerLinks">
-            <a href="#" aria-label="LinkedIn (pendiente de confirmar)">
-              LinkedIn
-            </a>
-            <a href="https://instagram.com/solmaslegal" aria-label="Instagram">
-              Instagram
-            </a>
-            <a href="#" aria-label="Facebook (pendiente de confirmar)">
-              Facebook
-            </a>
-          </div>
-
-          <p className="p-muted" style={{ marginTop: 12 }}>
-            La información del sitio es informativa y no crea relación abogado–cliente.
-          </p>
+        <div className="hr" style={{ margin: "26px 0" }} />
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", color: "rgba(71,85,105,.9)", fontSize: 13 }}>
+          <span>© {new Date().getFullYear()} {site.name}. Todos los derechos reservados.</span>
+          <span>Jurisdicción: República de Panamá</span>
         </div>
       </div>
 
-      <div className="container" style={{ paddingTop: 18, color: "var(--muted)", fontSize: 13 }}>
-        © {new Date().getFullYear()} {SITE.name}. Todos los derechos reservados.
-      </div>
+      <style jsx>{`
+        @media (max-width: 980px){
+          .grid{ grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </footer>
   );
 }
