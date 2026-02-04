@@ -28,7 +28,7 @@ const team = [
 
 function EquipoHero() {
   return (
-    <section style={{ position: "relative", minHeight: "44vh", display: "grid", placeItems: "center" }}>
+    <section style={{ position: "relative", minHeight: "28vh", display: "grid", placeItems: "center" }}>
       <picture style={{ position: "absolute", inset: 0 }}>
         <source media="(max-width: 720px)" srcSet={ASSETS.hero.teamMobile} />
         <img
