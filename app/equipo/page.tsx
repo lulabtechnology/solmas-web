@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { ASSETS, site } from "@/lib/site";
 
 const team = [
@@ -10,7 +11,6 @@ const team = [
       "Formación en Derecho y Ciencias Políticas con énfasis en negocios internacionales.",
       "Especialización en procesos electorales y democracia.",
       "Estudiante de maestría en Docencia Superior",
-      
     ],
   },
   {
@@ -27,29 +27,50 @@ const team = [
 ] as const;
 
 function EquipoHero() {
+  const bgStyle = {
+    ["--bg-desktop" as any]: `url(${ASSETS.hero.teamDesktop})`,
+    ["--bg-mobile" as any]: `url(${ASSETS.hero.teamMobile})`,
+  } as CSSProperties;
+
   return (
-    <section style={{ position: "relative", minHeight: "64vh", display: "grid", placeItems: "center" }}>
-      <picture style={{ position: "absolute", inset: 0 }}>
+    <section
+      className="equipoHero"
+      style={{
+        position: "relative",
+        minHeight: "54vh", // desktop: menos alto para que no se vea “alargado”
+        display: "grid",
+        placeItems: "center",
+        overflow: "hidden",
+      }}
+    >
+      {/* Fondo blur para que si usamos "contain" no se vea vacío */}
+      <div className="equipoHeroBg" style={bgStyle} />
+
+      {/* Imagen principal */}
+      <picture style={{ position: "absolute", inset: 0, zIndex: 1 }}>
         <source media="(max-width: 720px)" srcSet={ASSETS.hero.teamMobile} />
         <img
           src={ASSETS.hero.teamDesktop}
           alt="Equipo SOLMAS"
-          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
+          className="equipoHeroImg"
           loading="eager"
         />
       </picture>
 
+      {/* Overlay */}
       <div
         aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,
+          zIndex: 2,
           background:
             "linear-gradient(90deg, rgba(2,6,23,.70) 0%, rgba(2,6,23,.35) 55%, rgba(2,6,23,.18) 100%)",
         }}
       />
 
-      <div className="container" style={{ position: "relative", padding: "52px 0" }}>
+      {/* Contenido */}
+      <div className="container" style={{ position: "relative", zIndex: 3, padding: "52px 0" }}>
         <div style={{ maxWidth: 760 }}>
           <div className="badge" style={{ marginBottom: 14, color: "rgba(255,255,255,.92)" }}>
             SOLMAS · Equipo
@@ -64,8 +85,36 @@ function EquipoHero() {
       </div>
 
       <style>{`
+        /* ✅ Desktop: imagen COMPLETA (sin recorte) */
+        .equipoHeroImg{
+          width: 100%;
+          height: 100%;
+          object-fit: contain;     /* CLAVE: no recorta */
+          object-position: center;
+        }
+
+        /* Fondo blur (con variables) */
+        .equipoHeroBg{
+          position:absolute;
+          inset:0;
+          z-index:0;
+          background-image: var(--bg-desktop);
+          background-size: cover;
+          background-position: center;
+          transform: scale(1.08);
+          filter: blur(18px);
+          opacity: .55;
+        }
+
+        /* ✅ Mobile: un poco más alto y subimos el encuadre para que NO se corte la cara */
         @media (max-width: 720px){
-          section{ min-height: 52vh !important; }
+          .equipoHero{ min-height: 60vh !important; }
+          .equipoHeroBg{ background-image: var(--bg-mobile); }
+
+          .equipoHeroImg{
+            object-fit: cover;           /* en mobile conviene ocupar más */
+            object-position: 50% 16%;    /* sube el foco (ajusta 10%–25% si hace falta) */
+          }
         }
       `}</style>
     </section>
@@ -128,7 +177,10 @@ export default function Page() {
                         <a className="btn primary" href="/contacto">
                           Agendar consulta
                         </a>
-                        <a className="btn" href={`mailto:${site.email}?subject=${encodeURIComponent("Consulta - SOLMAS")}`}>
+                        <a
+                          className="btn"
+                          href={`mailto:${site.email}?subject=${encodeURIComponent("Consulta - SOLMAS")}`}
+                        >
                           Escribir correo
                         </a>
                       </div>
