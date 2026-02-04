@@ -9,6 +9,8 @@ const team = [
       "Egresada de la USMA (Derecho).",
       "Formación en Derecho y Ciencias Políticas con énfasis en negocios internacionales.",
       "Especialización en procesos electorales y democracia.",
+      "Estudiante de maestría en Docencia Superior",
+      
     ],
   },
   {
