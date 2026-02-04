@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import { ASSETS, site } from "@/lib/site";
 
 const team = [
@@ -27,93 +26,98 @@ const team = [
 ] as const;
 
 function EquipoHero() {
-  const bgStyle = {
-    ["--bg-desktop" as any]: `url(${ASSETS.hero.teamDesktop})`,
-    ["--bg-mobile" as any]: `url(${ASSETS.hero.teamMobile})`,
-  } as CSSProperties;
-
   return (
-    <section
-      className="equipoHero"
-      style={{
-        position: "relative",
-        minHeight: "54vh", // desktop: menos alto para que no se vea “alargado”
-        display: "grid",
-        placeItems: "center",
-        overflow: "hidden",
-      }}
-    >
-      {/* Fondo blur para que si usamos "contain" no se vea vacío */}
-      <div className="equipoHeroBg" style={bgStyle} />
-
-      {/* Imagen principal */}
-      <picture style={{ position: "absolute", inset: 0, zIndex: 1 }}>
+    <section className="equipoHero">
+      <picture className="equipoHeroBg">
         <source media="(max-width: 720px)" srcSet={ASSETS.hero.teamMobile} />
         <img
+          className="equipoHeroImg"
           src={ASSETS.hero.teamDesktop}
           alt="Equipo SOLMAS"
-          className="equipoHeroImg"
           loading="eager"
         />
       </picture>
 
-      {/* Overlay */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 2,
-          background:
-            "linear-gradient(90deg, rgba(2,6,23,.70) 0%, rgba(2,6,23,.35) 55%, rgba(2,6,23,.18) 100%)",
-        }}
-      />
+      <div className="equipoHeroOverlay" aria-hidden="true" />
 
-      {/* Contenido */}
-      <div className="container" style={{ position: "relative", zIndex: 3, padding: "52px 0" }}>
+      <div className="container equipoHeroInner">
         <div style={{ maxWidth: 760 }}>
-          <div className="badge" style={{ marginBottom: 14, color: "rgba(255,255,255,.92)" }}>
+          <div
+            className="badge"
+            style={{
+              marginBottom: 14,
+              color: "rgba(255,255,255,.92)",
+              borderColor: "rgba(217,194,154,.35)",
+              background: "rgba(176,141,87,.14)",
+            }}
+          >
             SOLMAS · Equipo
           </div>
+
           <h1 className="h1" style={{ color: "#fff" }}>
             Profesionales
           </h1>
-          <p className="p" style={{ marginTop: 10, color: "rgba(255,255,255,.80)", maxWidth: 720 }}>
+
+          <p
+            className="p"
+            style={{
+              marginTop: 10,
+              color: "rgba(255,255,255,.82)",
+              maxWidth: 720,
+              fontSize: 17,
+            }}
+          >
             Un equipo enfocado en excelencia técnica, trato humano y comunicación transparente.
           </p>
         </div>
       </div>
 
       <style>{`
-        /* ✅ Desktop: imagen COMPLETA (sin recorte) */
+        .equipoHero{
+          position: relative;
+          min-height: 62vh;
+          display: grid;
+          place-items: center;
+          overflow: hidden;
+        }
+
+        .equipoHeroBg{
+          position: absolute;
+          inset: 0;
+        }
+
+        /* ✅ CLAVE: no recorta */
         .equipoHeroImg{
           width: 100%;
           height: 100%;
-          object-fit: contain;     /* CLAVE: no recorta */
-          object-position: center;
+          object-fit: contain;         /* ✅ muestra completa */
+          object-position: center;     /* centrada */
+          background: #0b1220;         /* para que no se vea blanco si sobra espacio */
         }
 
-        /* Fondo blur (con variables) */
-        .equipoHeroBg{
-          position:absolute;
-          inset:0;
-          z-index:0;
-          background-image: var(--bg-desktop);
-          background-size: cover;
-          background-position: center;
-          transform: scale(1.08);
-          filter: blur(18px);
-          opacity: .55;
+        .equipoHeroOverlay{
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, rgba(2,6,23,.72) 0%, rgba(2,6,23,.40) 55%, rgba(2,6,23,.18) 100%);
         }
 
-        /* ✅ Mobile: un poco más alto y subimos el encuadre para que NO se corte la cara */
+        .equipoHeroInner{
+          position: relative;
+          padding: 56px 0;
+        }
+
+        /* ✅ Mobile: más alto + overlay vertical + imagen completa */
         @media (max-width: 720px){
-          .equipoHero{ min-height: 60vh !important; }
-          .equipoHeroBg{ background-image: var(--bg-mobile); }
+          .equipoHero{ min-height: 70vh; }
+          .equipoHeroInner{ padding: 46px 0; }
+
+          .equipoHeroOverlay{
+            background: linear-gradient(180deg, rgba(2,6,23,.72) 0%, rgba(2,6,23,.42) 60%, rgba(2,6,23,.18) 100%);
+          }
 
           .equipoHeroImg{
-            object-fit: cover;           /* en mobile conviene ocupar más */
-            object-position: 50% 16%;    /* sube el foco (ajusta 10%–25% si hace falta) */
+            object-fit: contain;     /* ✅ no recorta en móvil */
+            object-position: center;
           }
         }
       `}</style>
@@ -128,13 +132,20 @@ export default function Page() {
 
       <section className="section">
         <div className="container">
-          <div className="grid" style={{ marginTop: 8, gridTemplateColumns: "repeat(2, 1fr)", alignItems: "stretch" }}>
+          <div
+            className="grid equipoGrid"
+            style={{
+              marginTop: 8,
+              gridTemplateColumns: "repeat(2, 1fr)",
+              alignItems: "stretch",
+            }}
+          >
             {team.map((m) => (
               <div key={m.name} className="card">
                 <div className="card-pad" style={{ display: "grid", gap: 14 }}>
-                  {/* Imagen NO recortada */}
+                  {/* ✅ Imagen NO recortada en tarjeta */}
                   <div
-                    className="grid"
+                    className="grid equipoCardTop"
                     style={{
                       gridTemplateColumns: "min(220px, 34%) 1fr",
                       gap: 16,
@@ -142,6 +153,7 @@ export default function Page() {
                     }}
                   >
                     <div
+                      className="equipoCardImgWrap"
                       style={{
                         borderRadius: 18,
                         overflow: "hidden",
@@ -155,12 +167,10 @@ export default function Page() {
                       <img
                         src={m.image}
                         alt={m.name}
-                        width={520}
-                        height={680}
                         style={{
                           width: "100%",
                           height: "100%",
-                          objectFit: "contain",
+                          objectFit: "contain",     // ✅ completo
                           objectPosition: "center",
                         }}
                         loading="lazy"
@@ -199,7 +209,9 @@ export default function Page() {
 
           <style>{`
             @media (max-width: 980px){
-              .grid{ grid-template-columns: 1fr !important; }
+              .equipoGrid{ grid-template-columns: 1fr !important; }
+              .equipoCardTop{ grid-template-columns: 1fr !important; }
+              .equipoCardImgWrap{ min-height: 320px !important; }
             }
           `}</style>
         </div>
