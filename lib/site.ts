@@ -17,14 +17,23 @@ export const site = SITE;
 /** ✅ RUTAS DE ASSETS (aquí se controla TODO lo visual) */
 export const ASSETS = {
   brand: {
-    // Cambia SVG -> PNG aquí y listo
+    // ✅ PNG
     logoBlue: "/assets/img/brand/logo-azul.png",
     logoWhite: "/assets/img/brand/logo-blanco.png",
     favicon: "/favicon.ico",
   },
   hero: {
+    // Home hero (slide 1 = existentes)
     desktop: "/assets/img/hero/hero-desktop.jpg",
     mobile: "/assets/img/hero/hero-mobile.jpg",
+
+    // Home hero (slide 2 = NUEVAS)
+    desktop2: "/assets/img/hero/hero-desktop-2.jpg",
+    mobile2: "/assets/img/hero/hero-mobile-2.jpg",
+
+    // Equipo hero (NUEVAS)
+    teamDesktop: "/assets/img/hero/equipo-hero-desktop.jpg",
+    teamMobile: "/assets/img/hero/equipo-hero-mobile.jpg",
   },
   team: {
     ana: "/assets/img/team/ana-isabel.jpg",
@@ -62,7 +71,6 @@ export const LEGAL: LegalConfig = {
     ruc: "[PLACEHOLDER: RUC exacto]",
     domicilio: "[PLACEHOLDER: Domicilio legal completo]",
     address: "[PLACEHOLDER: Domicilio legal completo]",
-
     email: SITE.email,
     phone: SITE.phone,
   },
