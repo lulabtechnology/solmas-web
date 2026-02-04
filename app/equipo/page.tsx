@@ -3,7 +3,7 @@ import { ASSETS, site } from "@/lib/site";
 const team = [
   {
     name: "Ana Isabel Madrid",
-    role: "Abogada Senior",
+    role: "Socio / Abogado",
     image: ASSETS.team.ana,
     bullets: [
       "Egresada de la USMA (Derecho).",
