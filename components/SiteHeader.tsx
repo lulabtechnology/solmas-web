@@ -36,15 +36,15 @@ export default function SiteHeader() {
           borderBottom: scrolled ? "1px solid rgba(15,23,42,.10)" : "1px solid transparent",
         }}
       >
-        <div className="container" style={{ height: 74, display: "flex", alignItems: "center", gap: 16 }}>
+        <div className="container headerRow" style={{ height: 74, display: "flex", alignItems: "center", gap: 16 }}>
           <Link href="/" aria-label={`${site.name} Inicio`} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {/* ✅ PNG (controlado por ASSETS) */}
             <img
+              className="brandLogo"
               src={ASSETS.brand.logoBlue}
               alt={`${site.name} logo`}
-              width={180}
-              height={46}
-              style={{ height: 28, width: "auto" }}
+              width={240}
+              height={70}
+              style={{ height: 40, width: "auto" }}
             />
           </Link>
 
@@ -123,11 +123,16 @@ export default function SiteHeader() {
         </div>
       )}
 
-      {/* ✅ SIN styled-jsx */}
       <style>{`
         @media (max-width: 980px) {
           .hideMobile { display: none !important; }
           .showMobile { display: inline-flex !important; }
+        }
+
+        /* ✅ Logo más grande y consistente */
+        .brandLogo{ height: 40px !important; width: auto !important; }
+        @media (max-width: 720px){
+          .brandLogo{ height: 36px !important; }
         }
       `}</style>
     </>
