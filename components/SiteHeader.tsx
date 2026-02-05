@@ -36,15 +36,32 @@ export default function SiteHeader() {
           borderBottom: scrolled ? "1px solid rgba(15,23,42,.10)" : "1px solid transparent",
         }}
       >
-        <div className="container headerRow" style={{ height: 74, display: "flex", alignItems: "center", gap: 16 }}>
-          <Link href="/" aria-label={`${site.name} Inicio`} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div
+          className="container headerRow"
+          style={{
+            height: 92, // ✅ más alto para que el logo grande quepa bien
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+          }}
+        >
+          <Link
+            href="/"
+            aria-label={`${site.name} Inicio`}
+            style={{ display: "flex", alignItems: "center", gap: 12 }}
+          >
             <img
               className="brandLogo"
               src={ASSETS.brand.logoBlue}
               alt={`${site.name} logo`}
-              width={330}
-              height={90}
-              style={{ width: 330, height: "auto" }}
+              width={700}   // ✅ “intrinsic size” grande (no estira, ayuda a nitidez)
+              height={220}
+              style={{
+                height: 60,  // ✅ tamaño real en desktop
+                width: "auto",
+                display: "block",
+                objectFit: "contain",
+              }}
             />
           </Link>
 
@@ -98,7 +115,11 @@ export default function SiteHeader() {
           }}
           onClick={() => setOpen(false)}
         >
-          <div className="card" style={{ width: "min(520px, 100%)", background: "#fff" }} onClick={(e) => e.stopPropagation()}>
+          <div
+            className="card"
+            style={{ width: "min(520px, 100%)", background: "#fff" }}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="card-pad" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <strong>{site.name}</strong>
               <button className="btn small" type="button" onClick={() => setOpen(false)}>
@@ -127,12 +148,13 @@ export default function SiteHeader() {
         @media (max-width: 980px) {
           .hideMobile { display: none !important; }
           .showMobile { display: inline-flex !important; }
+          .headerRow { height: 84px !important; }
         }
 
-        /* ✅ Logo más grande y consistente */
-        .brandLogo{ height: 40px !important; width: auto !important; }
+        /* ✅ Logo grande (esto manda) */
+        .brandLogo { height: 60px !important; width: auto !important; }
         @media (max-width: 720px){
-          .brandLogo{ height: 36px !important; }
+          .brandLogo { height: 46px !important; } /* ✅ móvil más grande */
         }
       `}</style>
     </>
