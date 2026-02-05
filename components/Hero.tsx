@@ -1,57 +1,62 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { site, ASSETS } from "@/lib/site";
 
 type Slide = { desktop: string; mobile: string; alt: string };
 
+function uniqSlides(slides: Slide[]) {
+  const seen = new Set<string>();
+  return slides.filter((s) => {
+    const key = `${s.desktop}|${s.mobile}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export default function Hero() {
-  const slides = useMemo<Slide[]>(
-    () => [
+  const slides = useMemo<Slide[]>(() => {
+    const heroAny = ASSETS.hero as any;
+
+    // ✅ Soporta si ya tienes desktop2/mobile2 en ASSETS.hero (no rompe si NO existen)
+    const base: Slide[] = [
+      { desktop: heroAny.desktop, mobile: heroAny.mobile, alt: "Firma legal en Panamá" },
       {
-        desktop: ASSETS.hero.desktop,
-        mobile: ASSETS.hero.mobile,
-        alt: "Firma legal en Panamá",
+        desktop: heroAny.desktop2 ?? heroAny.desktop,
+        mobile: heroAny.mobile2 ?? heroAny.mobile,
+        alt: "Asesoría legal estratégica en Panamá",
       },
-      {
-        desktop: ASSETS.hero.desktop2,
-        mobile: ASSETS.hero.mobile2,
-        alt: "Asesoría legal en Panamá",
-      },
-    ],
-    []
-  );
+    ];
+
+    const cleaned = uniqSlides(base).filter((s) => !!s.desktop && !!s.mobile);
+    return cleaned.length ? cleaned : [{ desktop: heroAny.desktop, mobile: heroAny.mobile, alt: "Firma legal en Panamá" }];
+  }, []);
 
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReduced =
-      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReduced) return;
-
+    if (slides.length <= 1) return;
     const t = window.setInterval(() => {
       setIdx((p) => (p + 1) % slides.length);
     }, 6500);
-
     return () => window.clearInterval(t);
   }, [slides.length]);
 
   return (
-    <section
-      className="heroWrap"
-      style={{ position: "relative", minHeight: "72vh", display: "grid", placeItems: "center" }}
-    >
-      {/* Media (2 slides crossfade) */}
-      <div className="heroMedia" style={{ position: "absolute", inset: 0 }}>
+    <section className="heroWrap" style={{ position: "relative", minHeight: "72vh", display: "grid", placeItems: "center" }}>
+      {/* ✅ Background carousel */}
+      <div style={{ position: "absolute", inset: 0 }}>
         {slides.map((s, i) => (
           <picture
-            key={s.desktop}
-            className={`heroSlide ${i === idx ? "isActive" : ""}`}
-            style={{ position: "absolute", inset: 0 }}
+            key={s.desktop + s.mobile}
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: i === idx ? 1 : 0,
+              transition: "opacity 700ms ease",
+            }}
           >
             <source media="(max-width: 720px)" srcSet={s.mobile} />
             <img
@@ -71,8 +76,7 @@ export default function Hero() {
         style={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(90deg, rgba(2,6,23,.72) 0%, rgba(2,6,23,.42) 45%, rgba(2,6,23,.28) 100%)",
+          background: "linear-gradient(90deg, rgba(2,6,23,.72) 0%, rgba(2,6,23,.42) 45%, rgba(2,6,23,.28) 100%)",
         }}
       />
 
@@ -102,72 +106,67 @@ export default function Hero() {
             <Link className="btn primary" href="/contacto">
               Agendar consulta
             </Link>
-            <Link className="btn" href="/contacto#form">
+
+            {/* ✅ BOTÓN BLANCO */}
+            <Link className="btn heroSecondary" href="/contacto#form">
               Cuéntanos tu caso
             </Link>
           </div>
 
-          <p style={{ marginTop: 14, color: "rgba(255,255,255,.70)", fontSize: 13 }}>
-            Respuesta inicial en 24–48 horas hábiles <span style={{ opacity: 0.8 }}>(pendiente de confirmar)</span>
+          {/* ✅ SOLO 24 HORAS */}
+          <p style={{ marginTop: 14, color: "rgba(255,255,255,.75)", fontSize: 13 }}>
+            Respuesta inicial en 24 horas hábiles.
           </p>
 
-          <div
-            style={{
-              marginTop: 22,
-              display: "flex",
-              gap: 18,
-              flexWrap: "wrap",
-              color: "rgba(255,255,255,.78)",
-              fontSize: 13,
-            }}
-          >
+          <div style={{ marginTop: 18, display: "flex", gap: 18, flexWrap: "wrap", color: "rgba(255,255,255,.78)", fontSize: 13 }}>
             <span>📞 {site.phone}</span>
             <span>✉️ {site.email}</span>
           </div>
 
-          {/* Dots */}
-          <div style={{ marginTop: 18, display: "flex", gap: 8 }}>
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label={`Ir a slide ${i + 1}`}
-                onClick={() => setIdx(i)}
-                style={{
-                  width: 9,
-                  height: 9,
-                  borderRadius: 999,
-                  border: "1px solid rgba(255,255,255,.35)",
-                  background: i === idx ? "rgba(255,255,255,.75)" : "rgba(255,255,255,.18)",
-                  cursor: "pointer",
-                }}
-              />
-            ))}
-          </div>
+          {/* Dots (si hay carrusel) */}
+          {slides.length > 1 && (
+            <div style={{ marginTop: 16, display: "flex", gap: 8, alignItems: "center" }}>
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`Ir a slide ${i + 1}`}
+                  onClick={() => setIdx(i)}
+                  style={{
+                    width: i === idx ? 18 : 10,
+                    height: 10,
+                    borderRadius: 999,
+                    border: "1px solid rgba(255,255,255,.45)",
+                    background: i === idx ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.18)",
+                    cursor: "pointer",
+                    transition: "all 200ms ease",
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       <style>{`
-        .heroSlide{
-          opacity:0;
-          transition: opacity 900ms ease;
-        }
-        .heroSlide.isActive{
-          opacity:1;
-        }
-
-        /* ✅ Mobile: overlay vertical y más altura */
+        /* ✅ Ajustes mobile para que el hero se vea bien en celular */
         @media (max-width: 720px){
           .heroWrap{ min-height: 78vh !important; }
           .heroInner{ padding: 46px 0 !important; }
           .heroOverlay{
-            background: linear-gradient(180deg, rgba(2,6,23,.72) 0%, rgba(2,6,23,.44) 55%, rgba(2,6,23,.22) 100%) !important;
+            background: linear-gradient(180deg, rgba(2,6,23,.74) 0%, rgba(2,6,23,.46) 55%, rgba(2,6,23,.22) 100%) !important;
           }
         }
 
-        /* ✅ Reduce motion */
-        @media (prefers-reduced-motion: reduce){
-          .heroSlide{ transition: none !important; }
+        /* ✅ Botón blanco SOLO para el hero */
+        .heroSecondary{
+          color:#fff !important;
+          border-color: rgba(255,255,255,.55) !important;
+          background: rgba(255,255,255,.10) !important;
+        }
+        .heroSecondary:hover{
+          background: rgba(255,255,255,.16) !important;
+          border-color: rgba(255,255,255,.85) !important;
         }
       `}</style>
     </section>
