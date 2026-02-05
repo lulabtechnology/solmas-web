@@ -24,7 +24,6 @@ export default function HomePage() {
           >
             {[
               ["Derecho Corporativo y Mercantil", "Estructura societaria, contratos y soporte continuo para empresas."],
-              ["Notarías y Registro Público", "Trámites notariales, inscripciones y diligencias documentales."],
               ["Derecho Administrativo y Regulatorio", "Gestiones ante entidades y acompañamiento en permisos y licencias."],
               // ✅ QUITADO: Propiedad Intelectual
               ["Derecho Civil y Patrimonial", "Asuntos patrimoniales, compraventas y conflictos civiles."],
