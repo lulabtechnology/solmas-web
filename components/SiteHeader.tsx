@@ -42,9 +42,9 @@ export default function SiteHeader() {
               className="brandLogo"
               src={ASSETS.brand.logoBlue}
               alt={`${site.name} logo`}
-              width={240}
-              height={70}
-              style={{ width: 220, height: "auto" }}
+              width={330}
+              height={90}
+              style={{ width: 330, height: "auto" }}
             />
           </Link>
 
