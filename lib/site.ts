@@ -1,8 +1,8 @@
 export const SITE = {
-  name: "SOLMAS",
-  phone: "+507 6529-7584",
-  email: "solmaslegal@gmail.com",
-  address: "Panamá, San Francisco (Calle 65 Este)",
+  name: "SOLMAS LEGAL",
+  phone: "+507 6832-7240",
+  email: "info@solmaslegal.com",
+  address: "C. 65 Este, Panamá, Provincia de Panamá",
   instagram: "pendiente de confirmar",
   social: {
     linkedin: "#",
@@ -66,11 +66,11 @@ type LegalConfig = {
 export const LEGAL: LegalConfig = {
   jurisdiction: "República de Panamá",
   placeholders: {
-    legalName: "[PLACEHOLDER: Razón social exacta]",
-    razonSocial: "[PLACEHOLDER: Razón social exacta]",
-    ruc: "[PLACEHOLDER: RUC exacto]",
-    domicilio: "[PLACEHOLDER: Domicilio legal completo]",
-    address: "[PLACEHOLDER: Domicilio legal completo]",
+    legalName: "SOLMAS LEGAL",
+    razonSocial: "SOLMAS LEGAL",
+    ruc: "",
+    domicilio: SITE.address,
+    address: SITE.address,
     email: SITE.email,
     phone: SITE.phone,
   },

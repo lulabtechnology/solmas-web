@@ -26,7 +26,7 @@ export default function PrivacidadPage() {
 
         <h2 className="h3" style={{ fontFamily: "var(--font-serif)" }}>1. Responsable</h2>
         <p className="p">
-          Responsable: <strong>{LEGAL.placeholders.legalName}</strong> — RUC: <strong>{LEGAL.placeholders.ruc}</strong>.
+          Responsable: <strong>{LEGAL.placeholders.legalName}</strong>.
           Dirección: <strong>{LEGAL.placeholders.address}</strong>.
           Contacto: <a href={`mailto:${SITE.email}`} style={{ textDecoration: "underline" }}>{SITE.email}</a>.
         </p>

@@ -20,7 +20,7 @@ export default function SiteFooter() {
             <p className="p">Firma boutique en Panamá con enfoque humano, ético y tecnológicamente ágil.</p>
 
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <a className="btn small" href={`tel:${site.phone.replace(/\s/g, "")}`}>Llamar</a>
+              <a className="btn small" href={`tel:${site.phone.replace(/[^\d+]/g, "")}`}>Llamar</a>
               <a className="btn small" href={`mailto:${site.email}`}>Email</a>
               <button
                 className="btn small"
